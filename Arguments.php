@@ -15,7 +15,7 @@ class Arguments
 	protected $invalidSet = array();
 	protected $isDirty = true;
 	
-	public function __construct($inputList = null, $argList = null)
+	public function __construct($inputList = null, $argList = null, $validateNow = false)
 	{
 		if ($inputList) {
 			$this->setInput($inputList);
@@ -26,11 +26,16 @@ class Arguments
 				$this->addArg($arg);
 			}
 		}
+		
+		if ($validateNow && $this->isValid() !== true) {
+			echo PHP_EOL . $this->getHelp() . PHP_EOL;
+			exit();
+		}
 	}
 	
-	public static function create($inputList = null, $argList = null)
+	public static function create($inputList = null, $argList = null, $validateNow = false)
 	{
-		return new static($inputList, $argList);
+		return new static($inputList, $argList, $validateNow);
 	}
 	
 	public function setInput($inputList)
