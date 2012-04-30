@@ -188,6 +188,10 @@ class Arguments
 	
 	public function get($id)
 	{
+		if ($this->isDirty) {
+			$this->isValid();
+		}
+		
 		$id = (string) $id;
 		
 		if (isset($this->valueMap[$id])) {
