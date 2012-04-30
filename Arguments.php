@@ -495,6 +495,10 @@ class Value extends ArgAbstract
 	
 	public function isValid($value)
 	{
+		if ($this->validatorCallback === null) {
+			return true;
+		}
+		
 		$f = $this->validatorCallback;
 		return $f($value);
 	}
