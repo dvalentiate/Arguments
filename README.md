@@ -3,9 +3,10 @@ Arguments
 
 PHP command line arguments parser
 
-# example usage
+example usage
+-------------
 
-## from a nicely autoloaded script
+### from a nicely autoloaded script
 
 ```
 $args = new \Arguments\Arguments($argv, array(
@@ -19,7 +20,7 @@ $request = $args->get('resource');
 $role = $args->get('--role');
 ```
 
-## from a simple script needing an optional --APP_ENV parameter
+### from a simple script needing an optional --APP_ENV parameter
 
 ```
 #!/usr/bin/env php
@@ -37,7 +38,7 @@ if ($args->get('--APP_ENV')) {
 }
 ```
 
-## from a po file utility I wrote:
+### from a po file utility:
 ```
 #!/usr/bin/env php
 <?php
