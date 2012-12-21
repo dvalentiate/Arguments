@@ -33,7 +33,7 @@ class Test
 		$this->assertInstanceOf('Exception', $exception, 'asking to non declared param should throw an exception');
 	}
 	
-	function testNoneExpectedOneProvidedPos()
+	function testNoneExpectedOnePosProvided()
 	{
 		$provided = array('-', 'posParam1'); // should match $argv format
 		$expected = array();
@@ -43,14 +43,24 @@ class Test
 		$this->assertContains('argument "posParam1" not expected nor accepted', $args->isValid(), 'isValid should report an unexpected param');
 	}
 	
-	function testNoneExpectedOneProvidedNamed()
+	function testNoneExpectedOneNamedProvided()
 	{
 		$provided = array('-', '--namedParam1'); // should match $argv format
 		$expected = array();
 		
 		$args = new \Arguments\Arguments($provided, $expected);
 		
-		$this->assertContains('argument --namedParam1 is unknown and not accepted', $args->isValid(), 'isValid should report an unexpected param');
+		$this->assertContains('argument "--namedParam1" is unknown and not accepted', $args->isValid(), 'isValid should report an unexpected param');
+	}
+	
+	function testNoneExpectedOneCharProvided()
+	{
+		$provided = array('-', '-charParam1'); // should match $argv format
+		$expected = array();
+		
+		$args = new \Arguments\Arguments($provided, $expected);
+		
+		$this->assertContains('argument "-charParam1" is unknown and not accepted', $args->isValid(), 'isValid should report an unexpected param');
 	}
 	
 	function testOneOptPosExpectedNoneProvided()
@@ -79,6 +89,19 @@ class Test
 		$this->assertNull($args->get('--namedParam1'), 'get should return null for unprovided param');
 	}
 	
+	function testOneOptCharExpectedNoneProvided()
+	{
+		$provided = array('-'); // should match $argv format
+		$expected = array(
+			'-charParam1',
+		);
+		
+		$args = new \Arguments\Arguments($provided, $expected);
+		
+		$this->assertTrue($args->isValid(), 'isValid should return true when expecting an optional param and none are provided');
+		$this->assertNull($args->get('-charParam1'), 'get should return null for unprovided param');
+	}
+	
 	function testOneReqPosExpectedNoneProvided()
 	{
 		$provided = array('-'); // should match $argv format
@@ -105,6 +128,19 @@ class Test
 		$this->assertNull($args->get('--namedParam1'), 'get should return null for unprovided param');
 	}
 	
+	function testOneReqCharExpectedNoneProvided()
+	{
+		$provided = array('-'); // should match $argv format
+		$expected = array(
+			'-charParam1 REQUIRED',
+		);
+		
+		$args = new \Arguments\Arguments($provided, $expected);
+		
+		$this->assertContains('argument -charParam1 is required', $args->isValid(), 'isValid should report not passed required param');
+		$this->assertNull($args->get('-charParam1'), 'get should return null for unprovided param');
+	}
+	
 	function testOneOptFlagNamedExpectedNoneProvided()
 	{
 		$provided = array('-'); // should match $argv format
@@ -116,6 +152,19 @@ class Test
 		
 		$this->assertTrue($args->isValid(), 'isValid should return true when expecting an optional param and none are provided');
 		$this->assertFalse($args->get('--namedParam1'), 'get should return false for unprovided flag param');
+	}
+	
+	function testOneOptFlagCharExpectedNoneProvided()
+	{
+		$provided = array('-'); // should match $argv format
+		$expected = array(
+			'-charParam1 FLAG',
+		);
+		
+		$args = new \Arguments\Arguments($provided, $expected);
+		
+		$this->assertTrue($args->isValid(), 'isValid should return true when expecting an optional param and none are provided');
+		$this->assertFalse($args->get('-charParam1'), 'get should return false for unprovided flag param');
 	}
 	
 	function testOneOptPosExpectedOneProvided()
@@ -183,6 +232,45 @@ class Test
 		$this->assertTrue($args->get('--namedParam1'), 'get should return true for provided named flag param');
 	}
 	
+	function testOneOptCharExpectedOneEmptyProvided()
+	{
+		$provided = array('-', '-charParam1'); // should match $argv format
+		$expected = array(
+			'-charParam1',
+		);
+		
+		$args = new \Arguments\Arguments($provided, $expected);
+		
+		$this->assertContains('value expected for argument -charParam1', $args->isValid(), 'isValid should report not passed named param value');
+		$this->assertNull($args->get('-charParam1'), 'get should return null for unprovided named param value');
+	}
+	
+	function testOneOptCharExpectedOneValueProvided()
+	{
+		$provided = array('-', '-charParam1', 'charValue1'); // should match $argv format
+		$expected = array(
+			'-charParam1',
+		);
+		
+		$args = new \Arguments\Arguments($provided, $expected);
+		
+		$this->assertTrue($args->isValid(), 'isValid should return true when recieving the expected input');
+		$this->assertEquals('charValue1', $args->get('-charParam1'), 'get should return the provided named param value');
+	}
+	
+	function testOneFlagCharExpectedOneProvided()
+	{
+		$provided = array('-', '-charParam1'); // should match $argv format
+		$expected = array(
+			'-charParam1 FLAG',
+		);
+		
+		$args = new \Arguments\Arguments($provided, $expected);
+		
+		$this->assertTrue($args->isValid(), 'isValid should return true when recieving the expected input');
+		$this->assertTrue($args->get('-charParam1'), 'get should return true for provided named flag param');
+	}
+	
 	function testTwoReqPosExpectedOneProvided()
 	{
 		$provided = array('-', 'posValue1'); // should match $argv format
@@ -230,7 +318,7 @@ class Test
 	
 	function testMutlipleMixedExpectedMultipleMixedProvided()
 	{
-		$provided = array('-', 'posValue1', '--namedParam1', 'posValue2', '--namedParam2', 'namedValue2', '--namedParam3'); // should match $argv format
+		$provided = array('-', 'posValue1', '--namedParam1', '-charParam1', 'posValue2', '--namedParam2', 'namedValue2', '-charParam2', 'charValue2', '--namedParam3'); // should match $argv format
 		$expected = array(
 			'posParam1',
 			'posParam2',
@@ -240,6 +328,10 @@ class Test
 			'--namedParam3 FLAG',
 			'--namedParam4 FLAG',
 			'--namedParam5',
+			'-charParam1 FLAG',
+			'-charParam2',
+			'-charParam3 FLAG',
+			'-charParam4',
 		);
 		
 		$args = new \Arguments\Arguments($provided, $expected);
@@ -253,6 +345,10 @@ class Test
 		$this->assertTrue($args->get('--namedParam3'), 'get should return true for the provided named param flag');
 		$this->assertFalse($args->get('--namedParam4'), 'get should return false for the not provided named param flag');
 		$this->assertNull($args->get('--namedParam5'), 'get should return null for not provided named param');
+		$this->assertTrue($args->get('-charParam1'), 'get should return true for the provided char param flag');
+		$this->assertEquals('charValue2', $args->get('-charParam2'), 'get should return the provided char param value');
+		$this->assertFalse($args->get('-charParam3'), 'get should return false for the not provided char param flag');
+		$this->assertNull($args->get('-charParam4'), 'get should return null for not provided char param');
 	}
 //echo var_export($args->isValid(), true) . PHP_EOL;
 }

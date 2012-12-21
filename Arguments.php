@@ -98,7 +98,7 @@ class Arguments
 				continue;
 			}
 			
-			if ($argExpecting && strpos($input, '--') === 0) {
+			if ($argExpecting && strpos($input, '-') === 0) {
 				// expected value but got a argument
 				$this->invalidSet[] = 'value expected for argument ' . $this->inputList[$i - 1] . ' but got ' . $input;
 				$argExpecting = false;
@@ -112,14 +112,16 @@ class Arguments
 				continue;
 			}
 			
-			if (strpos($input, '--') === 0) {
-				// input looks like it could be a named flag
+			if (strpos($input, '-') === 0) {
+				// input looks like it could be a named or character flag
 				
-				if (!isset($this->argMap[$input])
-					|| ! $this->argMap[$input] instanceof ArgInterface\Named
-				) {
-					// not a valid named flag
-					$this->invalidSet[] = 'argument ' . $input . ' is unknown and not accepted';
+				if (!(isset($this->argMap[$input])
+					&& ($this->argMap[$input] instanceof ArgInterface\Named
+						|| $this->argMap[$input] instanceof ArgInterface\Character
+					)
+				)) {
+					// not a valid named nor character flag
+					$this->invalidSet[] = 'argument "' . $input . '" is unknown and not accepted';
 					$argExpecting = false;
 					continue;
 				}
@@ -539,6 +541,24 @@ class NamedValue extends Value
 	public function setId($id)
 	{
 		return parent::setId('--' . $id);
+	}
+}
+
+class CharacterFlag extends ArgAbstract
+	implements ArgInterface\Character, ArgInterface\Flag
+{
+	public function setId($id)
+	{
+		return parent::setId('-' . $id);
+	}
+}
+
+class CharacterValue extends Value
+	implements ArgInterface\Character
+{
+	public function setId($id)
+	{
+		return parent::setId('-' . $id);
 	}
 }
 
