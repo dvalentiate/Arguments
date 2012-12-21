@@ -140,6 +140,10 @@ class Arguments
 			$argExpecting = false;
 		}
 		
+		if ($argExpecting) {
+			$this->invalidSet[] = 'value expected for argument ' . $this->inputList[$i];
+		}
+		
 		// procoss the positioned input and get any error messages
 		$this->processPositioned($posValueList);
 	}
