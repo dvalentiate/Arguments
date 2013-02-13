@@ -16,8 +16,8 @@ $args = new \Arguments\Arguments($argv, array(
 ), true);
 
 $request = $args->get('resource');
-
-$role = $args->get('--role');
+$role = $args->get('--role', 'guest'); // default value of guest
+$showTimeStats = $args->get('--time'); // boolean
 ```
 
 ### from a simple script needing an optional --APP_ENV parameter
