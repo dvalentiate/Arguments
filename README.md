@@ -10,7 +10,7 @@ example usage
 
 ```
 $args = new \Arguments\Arguments($argv, array(
-  'resource REQUIRED resource url',
+	'resource REQUIRED resource url',
 	'--role role id',
 	'--time FLAG provide time usage for script in output',
 ), true);
@@ -28,7 +28,7 @@ $role = $args->get('--role');
 
 require_once dirname(__FILE__) . '/../library/Arguments/Arguments.php';
 $args = new Arguments\Arguments($argv, array(
-  '--APP_ENV',
+	'--APP_ENV',
 ), true);
 
 if ($args->get('--APP_ENV')) {
@@ -47,7 +47,7 @@ if ($args->get('--APP_ENV')) {
 
 require_once dirname(__FILE__) . '/../library/Arguments/Arguments.php';
 $args = new Arguments\Arguments($argv, array(
-  array(
+	array(
 		'source REQUIRED po file to read for new key/literal pairs',
 		function($x) {
 			return file_exists($x)
@@ -100,7 +100,7 @@ $optionSet = array(
 // validate the config options passed at the command line and give instructions if incorrect
 $error = null;
 if (($optionSet['showRemoved'] || $optionSet['showAdded'] || $optionSet['showChanged']) && !$optionSet['original']) {
-  $error = 'must provide original if using --showRemoved, --showAdded, or --showChanged' . PHP_EOL . PHP_EOL;
+	$error = 'must provide original if using --showRemoved, --showAdded, or --showChanged' . PHP_EOL . PHP_EOL;
 } elseif (($optionSet['showRemoved'] || $optionSet['showAdded'] || $optionSet['showChanged']) && $optionSet['maxLineLength']) {
 	$error = '--maxLineLength can not be used with --showRemoved, --showAdded, or --showChanged' . PHP_EOL . PHP_EOL;
 } elseif (($optionSet['showRemoved'] || $optionSet['showAdded'] || $optionSet['showChanged']) && $optionSet['translate']) {
@@ -112,5 +112,3 @@ if ($error || $args->isValid() !== true) {
 	exit();
 }
 ```
-
-
