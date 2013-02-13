@@ -197,7 +197,7 @@ class Arguments
 		}
 	}
 	
-	public function get($id)
+	public function get($id, $defaultValue = null)
 	{
 		if ($this->isDirty) {
 			$this->isValid();
@@ -218,7 +218,7 @@ class Arguments
 			return false;
 		}
 		
-		return null;
+		return $defaultValue;
 	}
 	
 	public function addArg($arg)

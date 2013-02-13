@@ -76,6 +76,19 @@ class Test
 		$this->assertNull($args->get('posParam1'), 'get should return null for unprovided param');
 	}
 	
+	function testOneOptPosExpectedNoneProvidedDefaultValue()
+	{
+		$provided = array('-'); // should match $argv format
+		$expected = array(
+			'posParam1',
+		);
+		
+		$args = new \Arguments\Arguments($provided, $expected);
+		
+		$this->assertTrue($args->isValid(), 'isValid should return true when expecting an optional param and none are provided');
+		$this->assertEquals('default_value', $args->get('posParam1', 'default_value'), 'get should return the provided default value for unprovided param');
+	}
+	
 	function testOneOptNamedExpectedNoneProvided()
 	{
 		$provided = array('-'); // should match $argv format
