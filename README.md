@@ -3,6 +3,13 @@ Arguments
 
 PHP command line arguments parser
 
+
+NOTE
+====
+
+This project served it purporse but there is a new kid on the block that seems to be much better. I'd recommend you check out https://github.com/docopt/docopt.php
+
+
 example usage
 -------------
 
